@@ -2,12 +2,16 @@ package com.netcracker.minispring;
 
 import com.netcracker.minispring.writer.Writer;
 
+import java.io.*;
 import java.util.Properties;
-
-import static java.lang.Class.forName;
 
 public class WriterFactory {
     private static WriterFactory instance;
+    Properties prop = new Properties();
+    OutputStream output = null;
+    InputStream input = null;
+    Object classWriter = null;
+
     private WriterFactory(){}
 
     public static WriterFactory getInstance(){
@@ -18,12 +22,24 @@ public class WriterFactory {
     }
 
     public Writer getWriter(String type){
-        String path = Properties.get(type);
+
         try {
-            Writer classWriter = Class.forName(path);
+            input = new FileInputStream("config.properties");
+            prop.load(input);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        String path = (String)prop.get(type);
+        try {
+            classWriter = Class.forName(path).newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return classWriter;
+        return (Writer)classWriter;
     }
 }
