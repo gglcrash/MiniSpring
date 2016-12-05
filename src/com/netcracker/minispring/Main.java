@@ -6,7 +6,7 @@ public class Main {
 
     public static void main(String[] args) {
         WriterFactory factory = WriterFactory.getInstance();
-        Writer myWriter = factory.getWriter("HTML");
+        Writer myWriter = factory.getWriter("XML");
         myWriter.write("Hello World!");
     }
 }
