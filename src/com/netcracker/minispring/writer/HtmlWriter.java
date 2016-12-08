@@ -2,7 +2,7 @@ package com.netcracker.minispring.writer;
 
 import com.netcracker.minispring.annotations.Component;
 
-@Component
+@Component("HTML")
 public class HtmlWriter implements Writer {
     @Override
     public void write(String str) {
