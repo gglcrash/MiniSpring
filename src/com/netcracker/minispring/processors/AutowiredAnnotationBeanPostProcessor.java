@@ -1,9 +1,7 @@
 package com.netcracker.minispring.processors;
 
 import com.netcracker.minispring.ApplicationContext;
-import com.netcracker.minispring.annotations.AutoInject;
 import com.netcracker.minispring.annotations.Autowired;
-import com.netcracker.minispring.annotations.Qualifier;
 
 import java.lang.reflect.*;
 import java.util.ArrayList;
@@ -25,15 +23,6 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
                 ArrayList<Object> params = new ArrayList<>();
 
                 for (Class<?> type : method.getParameterTypes()) {
-
-                    if(type.isAnnotationPresent(Qualifier.class)) {
-                        Qualifier qualifier = type.getAnnotation(Qualifier.class);
-                        if(qualifier.name().equals(""))
-                            params.add(ApplicationContext.getInstance().getBean(qualifier.clazz()));
-                        else
-                            params.add(ApplicationContext.getInstance().getBean(qualifier.name()));
-                    }
-                    else
                     if (ApplicationContext.getInstance().getComponents().containsValue(type)) {
                         if (!type.isInterface()) {
                             params.add(ApplicationContext.getInstance().getBean(type));
@@ -55,18 +44,11 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
             }
         }
         for (Field field : fields) {
-            if (field.isAnnotationPresent(AutoInject.class)) {
+            if (field.isAnnotationPresent(Autowired.class)) {
 
                 int modifiers = field.getModifiers();
                 field.setAccessible(true);
-                if(field.isAnnotationPresent(Qualifier.class)) {
-                    Qualifier qualifier = field.getAnnotation(Qualifier.class);
-                    if(qualifier.name().equals(""))
-                        field.set(instance,ApplicationContext.getInstance().getBean(qualifier.clazz()));
-                    else
-                        field.set(instance,ApplicationContext.getInstance().getBean(qualifier.name()));
-                }
-                else
+
                 if (!field.getType().isInterface()) field.set(instance, ApplicationContext.getInstance().getBean(field.getType()));
                 else
                 {
@@ -77,15 +59,13 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
                         }
                     }
                 }
-
                 if(Modifier.isPrivate(modifiers)||Modifier.isProtected(modifiers))
                     field.setAccessible(false);
             }
-
         }
 
         for (Constructor<?> constructor : constructors) {
-            if (constructor.isAnnotationPresent(AutoInject.class)) {
+            if (constructor.isAnnotationPresent(Autowired.class)) {
                 ArrayList<Object> params = new ArrayList<>();
                 for (Class<?> type : constructor.getParameterTypes()) {
                     if (ApplicationContext.getInstance().getComponents().containsValue(type))
