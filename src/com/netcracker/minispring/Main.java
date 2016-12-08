@@ -1,10 +1,5 @@
 package com.netcracker.minispring;
 
-import com.netcracker.minispring.annotations.AutoInject;
-import com.netcracker.minispring.annotations.Autowired;
-import com.netcracker.minispring.writer.HtmlWriter;
-import com.netcracker.minispring.writer.Writer;
-
 import java.lang.reflect.InvocationTargetException;
 
 public class Main {
