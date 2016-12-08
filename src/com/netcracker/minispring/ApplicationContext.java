@@ -1,9 +1,7 @@
 package com.netcracker.minispring;
 
 import com.netcracker.minispring.annotations.Component;
-import com.netcracker.minispring.processors.AutoInjectAnnotationBeanPostProcessor;
-import com.netcracker.minispring.processors.AutowiredAnnotationBeanPostProcessor;
-import com.netcracker.minispring.processors.BeanPostProcessor;
+import com.netcracker.minispring.processors.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,6 +33,8 @@ public class ApplicationContext {
         }
         analyzers.add(new AutoInjectAnnotationBeanPostProcessor(properties));
         analyzers.add(new AutowiredAnnotationBeanPostProcessor());
+        analyzers.add(new InjectRandomIntAnnotationBeanPostProcessor());
+        analyzers.add(new PostConstructAnnotationBeanPostProcessor());
         //analyzers.add(new AutoInjectAnnotationBeanPostProcessor(new Properties()));
     }
 
@@ -52,7 +52,7 @@ public class ApplicationContext {
         Object instance = clazz.newInstance();
 
         for (BeanPostProcessor analyzer : analyzers) {
-            analyzer.analyze(instance.getClass(), instance);
+            analyzer.checkAnnotation(instance.getClass(), instance);
         }
         return instance;
     }

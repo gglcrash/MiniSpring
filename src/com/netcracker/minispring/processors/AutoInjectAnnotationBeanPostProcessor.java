@@ -17,7 +17,7 @@ public class AutoInjectAnnotationBeanPostProcessor implements  BeanPostProcessor
         this.props = props;
     }
     @Override
-    public void analyze(Class<?> cl, Object instance) throws IllegalAccessException, InstantiationException, ClassNotFoundException, InvocationTargetException {
+    public void checkAnnotation(Class<?> cl, Object instance) throws IllegalAccessException, InstantiationException, ClassNotFoundException, InvocationTargetException {
         Method[] methods = cl.getDeclaredMethods();
         Field[] fields = cl.getDeclaredFields();
         Constructor<?>[] constructors = cl.getDeclaredConstructors();

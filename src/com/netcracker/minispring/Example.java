@@ -1,8 +1,6 @@
 package com.netcracker.minispring;
 
-import com.netcracker.minispring.annotations.AutoInject;
-import com.netcracker.minispring.annotations.Autowired;
-import com.netcracker.minispring.annotations.Component;
+import com.netcracker.minispring.annotations.*;
 import com.netcracker.minispring.writer.HtmlWriter;
 import com.netcracker.minispring.writer.Writer;
 import com.netcracker.minispring.writer.XmlWriter;
@@ -13,7 +11,17 @@ import java.lang.reflect.InvocationTargetException;
 public class Example {
     Example (){ }
 
+    private int postConstructValue;
+
+    @PostConstruct
+    void postConstructMethod(){
+        postConstructValue = 500;
+    }
+
+    @InjectRandomInt(min = 5, max = 10)
+    int random;
     private HtmlWriter htmlWriter;
+    private XmlWriter xmlWriter;
 
     @Autowired
     void setHtmlWriter(HtmlWriter htmlWriter){
@@ -23,8 +31,6 @@ public class Example {
     HtmlWriter getHtmlWriter(){
         return htmlWriter;
     }
-
-    private XmlWriter xmlWriter;
 
     @AutoInject("XML")
     void setXmlWriter(XmlWriter writer){
@@ -44,8 +50,15 @@ public class Example {
 
         //autoinject works
         checkAutoInject();
+
+        //check random int
+        checkRandomInt();
+
+        //checkPostConstruct
+        checkPostConstruct();
     }
-    void checkComponent(){
+
+    private void checkComponent(){
         Writer myWriter = null;
 
         try {
@@ -66,7 +79,7 @@ public class Example {
         }
     }
 
-    void checkAutowired(){
+    private void checkAutowired(){
         try {
             getHtmlWriter().write("Autowired works!");
         }
@@ -75,12 +88,28 @@ public class Example {
         }
     }
 
-    void checkAutoInject(){
+    private void checkAutoInject(){
         try {
             getXmlWriter().write("Auoinject for XmlWriter works!");
         }
         catch (NullPointerException e){
             System.out.println("XmlWriter2 AutoInject does not works!");
+        }
+    }
+
+    private void checkRandomInt(){
+        if (random!=0){
+            System.out.println("Excelent! Random value: "+random);
+        } else {
+            System.out.println("Something goes wrong with random!");
+        }
+    }
+
+    private void checkPostConstruct(){
+        if (postConstructValue !=0){
+            System.out.println("PostConstruct value: "+postConstructValue);
+        } else {
+            System.out.println("Something goes wrong with PostConstruct!");
         }
     }
 }
