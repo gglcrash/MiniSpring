@@ -1,7 +1,6 @@
 package com.netcracker.minispring.processors;
 
 import com.netcracker.minispring.annotations.InjectRandomInt;
-import com.sun.deploy.util.ReflectionUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

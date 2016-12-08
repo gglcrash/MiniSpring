@@ -1,16 +1,21 @@
 package com.netcracker.minispring;
 
 import com.netcracker.minispring.annotations.*;
-import com.netcracker.minispring.writer.HtmlWriter;
+import com.netcracker.minispring.writer.JsonWriter;
 import com.netcracker.minispring.writer.Writer;
 import com.netcracker.minispring.writer.XmlWriter;
 
 import java.lang.reflect.InvocationTargetException;
 
+@Author(firstName = "Artem",lastName = "Chizhikov")
 @Component("Example")
 public class Example {
     Example (){ }
 
+    @InjectRandomInt(min = 5, max = 10)
+    private int random;
+    private JsonWriter jsonWriter;
+    private XmlWriter xmlWriter;
     private int postConstructValue;
 
     @PostConstruct
@@ -18,18 +23,13 @@ public class Example {
         postConstructValue = 500;
     }
 
-    @InjectRandomInt(min = 5, max = 10)
-    int random;
-    private HtmlWriter htmlWriter;
-    private XmlWriter xmlWriter;
-
     @Autowired
-    void setHtmlWriter(HtmlWriter htmlWriter){
-        this.htmlWriter = htmlWriter;
+    void setJsonWriter(JsonWriter jsonWriter){
+        this.jsonWriter = jsonWriter;
     }
 
-    HtmlWriter getHtmlWriter(){
-        return htmlWriter;
+    JsonWriter getJsonWriter(){
+        return jsonWriter;
     }
 
     @AutoInject("XML")
@@ -56,13 +56,16 @@ public class Example {
 
         //checkPostConstruct
         checkPostConstruct();
+
+        //check Author
+        checkAuthor();
     }
 
     private void checkComponent(){
         Writer myWriter = null;
 
         try {
-            myWriter = (Writer)ApplicationContext.getInstance().getBean("JSON");
+            myWriter = (Writer)ApplicationContext.getInstance().getBean("HTML");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -81,7 +84,7 @@ public class Example {
 
     private void checkAutowired(){
         try {
-            getHtmlWriter().write("Autowired works!");
+            getJsonWriter().write("Autowired for JsonWriter works!");
         }
         catch (NullPointerException e){
             System.out.println("XmlWriter Autowired was required false!");
@@ -111,6 +114,11 @@ public class Example {
         } else {
             System.out.println("Something goes wrong with PostConstruct!");
         }
+    }
+
+    private void checkAuthor(){
+        System.out.println("Author is " + Example.class.getAnnotation(Author.class).firstName() + " "
+        + Example.class.getAnnotation(Author.class).lastName());
     }
 }
 

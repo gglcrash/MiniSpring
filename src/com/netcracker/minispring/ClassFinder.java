@@ -41,25 +41,6 @@ public class ClassFinder {
         return classes;
     }
 
-
-    public static List<Class<?>> getClassesFromPackage(Package pkg) {
-        ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
-
-        String pkgname = pkg.getName();
-        String relPath = pkgname.replace('.', '/');
-
-        URL resource = ClassLoader.getSystemClassLoader().getResource(relPath);
-
-        if (resource == null) {
-            throw new RuntimeException(relPath);
-        }
-
-        classes.addAll(processDirectory(new File(resource.getPath()), pkgname));
-
-
-        return classes;
-    }
-
     public static Map<String,Class<?>> getClassesFromPackage(File directory, String pkgname, Class<Component> annotation){
         List<Class<?>> classes = processDirectory(directory, pkgname);
         Map<String,Class<?>> result =new HashMap<String, Class<?>>();
