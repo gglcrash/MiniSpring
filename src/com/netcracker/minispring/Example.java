@@ -3,7 +3,6 @@ package com.netcracker.minispring;
 import com.netcracker.minispring.annotations.AutoInject;
 import com.netcracker.minispring.annotations.Autowired;
 import com.netcracker.minispring.annotations.Component;
-import com.netcracker.minispring.annotations.Qualifier;
 import com.netcracker.minispring.writer.HtmlWriter;
 import com.netcracker.minispring.writer.Writer;
 import com.netcracker.minispring.writer.XmlWriter;
@@ -37,34 +36,46 @@ public class Example {
     }
 
     public void start(){
-            Writer myWriter = null;
-            //Component works
-            try {
-                myWriter = (Writer)ApplicationContext.getInstance().getBean("JSON");
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
-            finally {
-                if (myWriter != null) {
-                    myWriter.write("Hello World! Component works!");
-                }
-            }
+        //Component works
+        checkComponent();
 
         //autowired works
-        try {
-        getHtmlWriter().write("Autowired works!");
-        }
-            catch (NullPointerException e){
-            System.out.println("XmlWriter Autowired was required false!");
-        }
+        checkAutowired();
 
         //autoinject works
+        checkAutoInject();
+    }
+    void checkComponent(){
+        Writer myWriter = null;
+
+        try {
+            myWriter = (Writer)ApplicationContext.getInstance().getBean("JSON");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (myWriter != null) {
+                myWriter.write("Hello World! Component works!");
+            }
+        }
+    }
+
+    void checkAutowired(){
+        try {
+            getHtmlWriter().write("Autowired works!");
+        }
+        catch (NullPointerException e){
+            System.out.println("XmlWriter Autowired was required false!");
+        }
+    }
+
+    void checkAutoInject(){
         try {
             getXmlWriter().write("Auoinject for XmlWriter works!");
         }
@@ -73,3 +84,4 @@ public class Example {
         }
     }
 }
+
